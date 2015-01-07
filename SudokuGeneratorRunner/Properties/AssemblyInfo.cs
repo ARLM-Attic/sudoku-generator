@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sudoku Generator Test")]
-[assembly: AssemblyDescription("Sudoku Generator Test")]
+[assembly: AssemblyTitle("Sudoku Generator Runner")]
+[assembly: AssemblyDescription("Sudoku Generator Runner")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("True Magic")]
-[assembly: AssemblyProduct("Sudoku Generator Test")]
+[assembly: AssemblyProduct("Sudoku Generator Runner")]
 [assembly: AssemblyCopyright("Copyright © True Magic 2015")]
 [assembly: AssemblyTrademark("True Magic")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("45befcdf-392f-4a2d-b679-bbd79d9cad52")]
+[assembly: Guid("682c69b5-8474-447f-b506-52ed6d72d714")]
 
 // Version information for an assembly consists of the following four values:
 //

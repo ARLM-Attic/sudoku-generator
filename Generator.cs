@@ -49,7 +49,7 @@ namespace TrueMagic.SudokuGenerator
                 indexes.Remove(index);
                 var x = index / sudoku.BoardSize;
                 var y = index % sudoku.BoardSize;
-                var possibleValues = sudoku.GetPossibleValues(x, y).ToList();
+                var possibleValues = sudoku.GetPossibleValues(x, y);
                 if (possibleValues.Count == 0)
                 {
                     return false;
@@ -64,14 +64,14 @@ namespace TrueMagic.SudokuGenerator
             var range = Enumerable.Range(0, sudoku.BoardSize);
             var solutions = range.SelectMany(x => range.Select(y => new Tuple<int, int>(x, y))).Where(item => sudoku.GetValue(item.Item1, item.Item2) == 0).ToList();
             var index = 0;
-            var possibleValuesCache = new Dictionary<int, List<byte>>();
+            var possibleValuesCache = new Dictionary<int, IList<byte>>();
             while (index >= 0 && index < solutions.Count)
             {
                 var x = solutions[index].Item1;
                 var y = solutions[index].Item2;
                 if (!possibleValuesCache.ContainsKey(index))
                 {
-                    possibleValuesCache[index] = sudoku.GetPossibleValues(x, y).ToList();
+                    possibleValuesCache[index] = sudoku.GetPossibleValues(x, y);
                 }
                 var possibleValues = possibleValuesCache[index];
                 if (possibleValues.Count == 0)
@@ -123,8 +123,6 @@ namespace TrueMagic.SudokuGenerator
                     if (SolveSolution(sudoku))
                     {
                         // Other solution possible - this cell cannot be cleared.
-                        // Set it to its original value.
-                        sudoku.SetValue(cell.Item1, cell.Item2, currentValue);
                         correct = false;
                         break;
                     }
@@ -138,6 +136,13 @@ namespace TrueMagic.SudokuGenerator
                 foreach (var clearedCell in clearedCells)
                 {
                     sudoku.SetValue(clearedCell.Item1, clearedCell.Item2, 0);
+                }
+
+                if (!correct)
+                {
+                    // Other solution possible - this cell cannot be cleared.
+                    // Set it to its original value.
+                    sudoku.SetValue(cell.Item1, cell.Item2, currentValue);
                 }
             }
             return clearedCells.Count >= clearedCellsRange.Item1;

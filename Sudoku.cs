@@ -13,6 +13,9 @@ namespace TrueMagic.SudokuGenerator
         private byte[][] rows;
         private byte[][] columns;
         private byte[][] blocks;
+        private HashSet<byte>[] rowValues;
+        private HashSet<byte>[] columnValues;
+        private HashSet<byte>[] blockValues;
 
         public Sudoku(int blockSize)
         {
@@ -23,11 +26,17 @@ namespace TrueMagic.SudokuGenerator
             this.rows = new byte[this.BoardSize][];
             this.columns = new byte[this.BoardSize][];
             this.blocks = new byte[this.BoardSize][];
+            this.rowValues = new HashSet<byte>[this.BoardSize];
+            this.columnValues = new HashSet<byte>[this.BoardSize];
+            this.blockValues = new HashSet<byte>[this.BoardSize];
             for (var x = 0; x < this.BoardSize; x++)
             {
                 this.rows[x] = new byte[this.BoardSize];
                 this.columns[x] = new byte[this.BoardSize];
                 this.blocks[x] = new byte[this.BoardSize];
+                this.rowValues[x] = new HashSet<byte>();
+                this.columnValues[x] = new HashSet<byte>();
+                this.blockValues[x] = new HashSet<byte>();
             }
 
             for (var blockX = 0; blockX < this.BlockSize; blockX++)
@@ -58,6 +67,9 @@ namespace TrueMagic.SudokuGenerator
             this.rows = sudoku.rows.Select(row => row.ToArray()).ToArray();
             this.columns = sudoku.columns.Select(column => column.ToArray()).ToArray();
             this.blocks = sudoku.blocks.Select(block => block.ToArray()).ToArray();
+            this.rowValues = sudoku.rowValues.Select(values => new HashSet<byte>(values)).ToArray();
+            this.columnValues = sudoku.rowValues.Select(values => new HashSet<byte>(values)).ToArray();
+            this.blockValues = sudoku.rowValues.Select(values => new HashSet<byte>(values)).ToArray();
         }
 
         public byte GetValue(int x, int y)
@@ -67,19 +79,27 @@ namespace TrueMagic.SudokuGenerator
 
         public void SetValue(int x, int y, byte value)
         {
+            var oldValue = GetValue(x, y);
             this.rows[x][y] = value;
             this.columns[y][x] = value;
-            this.blocks[this.blockIndex[y * this.BoardSize + x]][this.inBlockIndex[y * this.BoardSize + x]] = value;
+            var blockIndex = this.blockIndex[y * this.BoardSize + x];
+            this.blocks[blockIndex][this.inBlockIndex[y * this.BoardSize + x]] = value;
+            this.rowValues[x].Remove(oldValue);
+            this.rowValues[x].Add(value);
+            this.columnValues[y].Remove(oldValue);
+            this.columnValues[y].Add(value);
+            this.blockValues[blockIndex].Remove(oldValue);
+            this.blockValues[blockIndex].Add(value);
         }
 
         public bool CanSetValue(int x, int y, byte value)
         {
-            return !this.rows[x].Contains(value) && !this.columns[y].Contains(value) && !this.blocks[this.blockIndex[y * this.BoardSize + x]].Contains(value);
+            return !this.rowValues[x].Contains(value) && !this.columnValues[y].Contains(value) && !this.blockValues[this.blockIndex[y * this.BoardSize + x]].Contains(value);
         }
 
-        public IEnumerable<byte> GetPossibleValues(int x, int y)
+        public IList<byte> GetPossibleValues(int x, int y)
         {
-            return this.possibleValues.Where(value => CanSetValue(x, y, value));
+            return this.possibleValues.Where(value => CanSetValue(x, y, value)).ToList();
         }
 
         public Sudoku Clone()

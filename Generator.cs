@@ -6,7 +6,7 @@ namespace TrueMagic.SudokuGenerator
 {
     public class Generator
     {
-        private readonly Random random = new Random();
+        private readonly Random random = new Random(100);
 
         private const int MaxTries = 10000;
         private const int RandomCells = 15;
@@ -49,12 +49,12 @@ namespace TrueMagic.SudokuGenerator
                 indexes.Remove(index);
                 var x = index / sudoku.BoardSize;
                 var y = index % sudoku.BoardSize;
-                var possibleValues = sudoku.GetPossibleValues(x, y);
-                if (possibleValues.Length == 0)
+                var possibleValues = sudoku.GetPossibleValues(x, y).ToList();
+                if (possibleValues.Count == 0)
                 {
                     return false;
                 }
-                sudoku.SetValue(x, y, possibleValues[random.Next(possibleValues.Length)]);
+                sudoku.SetValue(x, y, possibleValues[random.Next(possibleValues.Count)]);
             }
             return true;
         }

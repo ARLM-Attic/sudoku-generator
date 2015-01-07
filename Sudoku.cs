@@ -77,9 +77,9 @@ namespace TrueMagic.SudokuGenerator
             return !this.rows[x].Contains(value) && !this.columns[y].Contains(value) && !this.blocks[this.blockIndex[y * this.BoardSize + x]].Contains(value);
         }
 
-        public byte[] GetPossibleValues(int x, int y)
+        public IEnumerable<byte> GetPossibleValues(int x, int y)
         {
-            return this.possibleValues.Where(value => CanSetValue(x, y, value)).ToArray();
+            return this.possibleValues.Where(value => CanSetValue(x, y, value));
         }
 
         public Sudoku Clone()

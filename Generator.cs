@@ -6,7 +6,7 @@ namespace TrueMagic.SudokuGenerator
 {
     public class Generator
     {
-        private readonly Random random = new Random(100);
+        private readonly Random random = new Random();
 
         private const int MaxTries = 10000;
         private const int RandomCells = 15;

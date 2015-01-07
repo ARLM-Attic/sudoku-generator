@@ -16,8 +16,12 @@ namespace TrueMagic.SudokuGenerator.Runner
             var startSolving = DateTime.Now;
             var result = generator.SolveSolution(sudoku);
             var finished = DateTime.Now;
-            Console.WriteLine("Generating: " + (startSolving - startGenerating));
-            Console.WriteLine("Solving: " + (finished - startSolving));
+            Console.WriteLine("Result: " + result);
+            if (result)
+            {
+                Console.WriteLine("Generating: " + (startSolving - startGenerating));
+                Console.WriteLine("Solving: " + (finished - startSolving));
+            }
         }
     }
 }

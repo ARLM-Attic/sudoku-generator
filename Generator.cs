@@ -62,7 +62,12 @@ namespace TrueMagic.SudokuGenerator
         public bool SolveSolution(Sudoku sudoku)
         {
             var range = Enumerable.Range(0, sudoku.BoardSize);
-            var solutions = range.SelectMany(x => range.Select(y => new Tuple<int, int>(x, y))).Where(item => sudoku.GetValue(item.Item1, item.Item2) == 0).ToList();
+            var solutions = 
+                range
+                .SelectMany(x => range.Select(y => new Tuple<int, int>(x, y)))
+                .Where(item => sudoku.GetValue(item.Item1, item.Item2) == 0)
+                .OrderBy(item => sudoku.GetPossibleValues(item.Item1, item.Item2).Count)
+                .ToList();
             var index = 0;
             var possibleValuesCache = new Dictionary<int, IList<byte>>();
             while (index >= 0 && index < solutions.Count)
